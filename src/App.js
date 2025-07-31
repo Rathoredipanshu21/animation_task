@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; // Don't forget to import AOS styles
 
 // --- SVG Icon Components (replaces lucide-react) ---
 const Zap = ({ className }) => (
@@ -37,6 +39,10 @@ const App = () => {
 
     useEffect(() => {
         document.documentElement.classList.add('dark'); // Default to dark
+        AOS.init({
+            duration: 1000, // Animation duration in milliseconds
+            once: true,      // Whether animation should happen only once
+        });
     }, []);
 
     const toggleTheme = () => {
@@ -61,7 +67,7 @@ const App = () => {
 
 // --- Sub-components ---
 
-// Cursor Glow Effect (MODIFIED)
+// Cursor Glow Effect
 const CursorGlow = () => {
     const [position, setPosition] = useState({ x: -300, y: -300 });
 
@@ -142,7 +148,7 @@ const BackgroundParticles = () => {
     return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full z-0 opacity-50" />;
 };
 
-// ✨ NEW: Subtle Floating Characters
+// Subtle Floating Characters
 const FloatingCharacters = () => {
     const canvasRef = useRef(null);
 
@@ -160,14 +166,14 @@ const FloatingCharacters = () => {
 
         const characters = "10@#$%&";
         const particles = [];
-        const particleCount = 75; // "less amount" as requested
+        const particleCount = 75;
 
         for (let i = 0; i < particleCount; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                vx: Math.random() * 0.6 - 0.3, // Slow horizontal drift
-                vy: Math.random() * 0.6 - 0.3, // Slow vertical drift
+                vx: Math.random() * 0.6 - 0.3,
+                vy: Math.random() * 0.6 - 0.3,
                 char: characters.charAt(Math.floor(Math.random() * characters.length)),
                 size: Math.random() * 10 + 10,
             });
@@ -180,14 +186,13 @@ const FloatingCharacters = () => {
                 p.x += p.vx;
                 p.y += p.vy;
 
-                // Wrap particles around the screen
                 if (p.x > canvas.width + p.size) p.x = -p.size;
                 else if (p.x < -p.size) p.x = canvas.width + p.size;
                 if (p.y > canvas.height + p.size) p.y = -p.size;
                 else if (p.y < -p.size) p.y = canvas.height + p.size;
                 
                 ctx.font = `${p.size}px monospace`;
-                ctx.fillStyle = `rgba(20, 184, 166, 0.2)`; // Very subtle teal
+                ctx.fillStyle = `rgba(20, 184, 166, 0.2)`;
                 ctx.fillText(p.char, p.x, p.y);
             });
             
@@ -202,12 +207,11 @@ const FloatingCharacters = () => {
         };
     }, []);
     
-    // z-4 places it behind the star shower
     return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-4 pointer-events-none" />;
 };
 
 
-// ✨ RETURNING: Animated Star Shower for Hero Section
+// Animated Star Shower for Hero Section
 const StarShower = () => {
     const canvasRef = useRef(null);
 
@@ -276,7 +280,6 @@ const StarShower = () => {
         };
     }, []);
 
-    // z-5 places it above the floating chars but below the hero text
     return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-5 pointer-events-none" />;
 };
 
@@ -359,20 +362,20 @@ const Navbar = ({ theme, toggleTheme, isMenuOpen, setIsMenuOpen }) => {
     );
 };
 
-// Hero Section (UPDATED)
+// Hero Section (UPDATED with AOS)
 const HeroSection = () => (
     <main id="home" className="relative container mx-auto px-4 min-h-screen flex flex-col items-center justify-center text-center pt-24 overflow-hidden">
         <FloatingCharacters />
         <StarShower />
         <div className="relative z-10 flex flex-col items-center">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white mb-6">
+            <h1 data-aos="fade-up" className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white mb-6">
                 <span className="block">No Time Limit Prop Firm</span>
                 <span className="block bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-green-500 mt-2">Conquer the Market</span>
             </h1>
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8">
+            <p data-aos="fade-up" data-aos-delay="200" className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8">
                 We craft digital experiences that glow with creativity and innovation, designed to captivate and drive results.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div data-aos="fade-up" data-aos-delay="400" className="flex flex-wrap gap-4 justify-center">
                 <button className="group relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium text-teal-400 transition duration-300 ease-out border-2 border-teal-500 rounded-full shadow-md hover:shadow-teal-400/40">
                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-teal-500 group-hover:translate-x-0 ease">
                         <Code className="w-6 h-6" />
@@ -382,44 +385,44 @@ const HeroSection = () => (
                 </button>
 
                <button className="group relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium text-amber-400 transition duration-300 ease-out border-2 border-amber-500 rounded-full shadow-md hover:shadow-amber-400/40">
-    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-black duration-300 -translate-x-full bg-amber-500 group-hover:translate-x-0 ease">
-        <Code className="w-6 h-6" />
-    </span>
-    <span className="absolute flex items-center justify-center w-full h-full text-amber-400 transition-all duration-300 transform group-hover:translate-x-full ease">
-      Know More
-    </span>
-    <span className="relative invisible">Know More</span>
-</button>
+                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-black duration-300 -translate-x-full bg-amber-500 group-hover:translate-x-0 ease">
+                        <Code className="w-6 h-6" />
+                    </span>
+                    <span className="absolute flex items-center justify-center w-full h-full text-amber-400 transition-all duration-300 transform group-hover:translate-x-full ease">
+                      Know More
+                    </span>
+                    <span className="relative invisible">Know More</span>
+                </button>
             </div>
         </div>
     </main>
 );
 
-// Features Section
+// Features Section (UPDATED with AOS)
 const FeaturesSection = () => (
     <section id="features" className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto lg:max-w-none">
                 <div className="text-center">
-                    <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Everything you need to deploy your app</h2>
-                    <p className="mt-4 text-lg text-slate-400">We've built a platform that's ready for anything.</p>
+                    <h2 data-aos="zoom-in-up" className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Everything you need to deploy your app</h2>
+                    <p data-aos="zoom-in-up" data-aos-delay="150" className="mt-4 text-lg text-slate-400">We've built a platform that's ready for anything.</p>
                 </div>
                 <div className="mt-16 grid grid-cols-1 gap-y-10 gap-x-8 lg:grid-cols-3">
-                    <div className="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl bg-slate-900/50 hover:border-teal-500/50 transition-colors duration-300">
+                    <div data-aos="fade-right" data-aos-delay="300" className="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl bg-slate-900/50 hover:border-teal-500/50 transition-colors duration-300">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400">
                             <Zap className="h-6 w-6" />
                         </div>
                         <h3 className="mt-6 text-lg font-medium text-white">Blazing Fast</h3>
                         <p className="mt-2 text-base text-slate-400">Our infrastructure is optimized for speed, ensuring your users have a seamless experience.</p>
                     </div>
-                    <div className="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl bg-slate-900/50 hover:border-teal-500/50 transition-colors duration-300">
+                    <div data-aos="fade-up" data-aos-delay="400" className="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl bg-slate-900/50 hover:border-teal-500/50 transition-colors duration-300">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400">
                             <ShieldCheck className="h-6 w-6" />
                         </div>
                         <h3 className="mt-6 text-lg font-medium text-white">Secure & Reliable</h3>
                         <p className="mt-2 text-base text-slate-400">With enterprise-grade security, your data and applications are always protected.</p>
                     </div>
-                    <div className="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl bg-slate-900/50 hover:border-teal-500/50 transition-colors duration-300">
+                    <div data-aos="fade-left" data-aos-delay="500" className="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl bg-slate-900/50 hover:border-teal-500/50 transition-colors duration-300">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400">
                             <Rocket className="h-6 w-6" />
                         </div>
@@ -432,16 +435,16 @@ const FeaturesSection = () => (
     </section>
 );
 
-// Testimonials Section
+// Testimonials Section (UPDATED with AOS)
 const TestimonialsSection = () => (
     <section id="testimonials" className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto lg:max-w-4xl">
-                <figure className="text-center">
+                <figure className="text-center" data-aos="fade-up">
                     <blockquote className="text-xl font-medium text-white sm:text-2xl">
                         <p>“Glow transformed our digital presence. Their attention to detail and creative vision is unparalleled. The results were simply spectacular.”</p>
                     </blockquote>
-                    <figcaption className="mt-10">
+                    <figcaption className="mt-10" data-aos="zoom-in" data-aos-delay="300">
                         <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-teal-500 to-green-600 p-1">
                             <img className="w-full h-full rounded-full bg-slate-900 object-cover" src="https://placehold.co/96x96/0a0a0a/34d399?text=AV" alt="Avatar" />
                         </div>
@@ -459,11 +462,11 @@ const TestimonialsSection = () => (
     </section>
 );
 
-// Call to Action Section
+// Call to Action Section (UPDATED with AOS)
 const CtaSection = () => (
     <section id="contact" className="py-20 sm:py-32">
         <div className="container mx-auto px-4">
-            <div className="relative isolate overflow-hidden bg-slate-900 px-6 py-24 text-center shadow-2xl shadow-teal-900/50 rounded-3xl sm:px-16 border border-slate-800">
+            <div data-aos="zoom-in-up" className="relative isolate overflow-hidden bg-slate-900 px-6 py-24 text-center shadow-2xl shadow-teal-900/50 rounded-3xl sm:px-16 border border-slate-800">
                 <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">Ready to ignite your project?</h2>
                 <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-300">Let's build something extraordinary together. Reach out to us and see how we can illuminate your ideas.</p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
@@ -483,10 +486,10 @@ const CtaSection = () => (
     </section>
 );
 
-// Footer Section
+// Footer Section (UPDATED with AOS)
 const Footer = () => (
     <footer className="container mx-auto px-4 py-8 text-center text-slate-500">
-        <div className="border-t border-slate-800/50 pt-8">
+        <div data-aos="fade-up" className="border-t border-slate-800/50 pt-8">
             <p>&copy; {new Date().getFullYear()} Glow Inc. All rights reserved.</p>
             <p className="text-xs mt-2">Crafted with <Power className="inline h-3 w-3 text-teal-500" /> and passion.</p>
         </div>
