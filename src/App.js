@@ -362,20 +362,52 @@ const Navbar = ({ theme, toggleTheme, isMenuOpen, setIsMenuOpen }) => {
     );
 };
 
-// Hero Section (UPDATED with AOS)
+// Hero Section (UPDATED with custom animation)
 const HeroSection = () => (
     <main id="home" className="relative container mx-auto px-4 min-h-screen flex flex-col items-center justify-center text-center pt-24 overflow-hidden">
         <FloatingCharacters />
         <StarShower />
         <div className="relative z-10 flex flex-col items-center">
-            <h1 data-aos="fade-up" className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white mb-6">
-                <span className="block">No Time Limit Prop Firm</span>
-                <span className="block bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-green-500 mt-2">Conquer the Market</span>
+            {/* --- Style block for the new animation --- */}
+            <style jsx>{`
+                .at-item {
+                    animation-name: focus-in-contract;
+                    animation-duration: 1.5s;
+                    animation-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940);
+                    animation-fill-mode: backwards; /* Start in the 'from' state before delay */
+                }
+                @keyframes focus-in-contract {
+                    0% {
+                        letter-spacing: 0.5em;
+                        filter: blur(12px);
+                        opacity: 0;
+                    }
+                    100% {
+                        filter: blur(0);
+                        opacity: 1;
+                    }
+                }
+            `}</style>
+    
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white mb-6">
+                {/* The user's requested animation is applied to the spans below */}
+                <div className='at-container'>
+                    <span className="at-item block" style={{ animationDelay: '0.2s' }}>
+                        No Time Limit Prop Firm
+                    </span>
+                    <span 
+                        className="at-item block bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-green-500 mt-2" 
+                        style={{ animationDelay: '0.7s' }}
+                    >
+                        Conquer the Market
+                    </span>
+                </div>
             </h1>
-            <p data-aos="fade-up" data-aos-delay="200" className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8">
+
+            <p data-aos="fade-up" data-aos-delay="1500" className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-8">
                 We craft digital experiences that glow with creativity and innovation, designed to captivate and drive results.
             </p>
-            <div data-aos="fade-up" data-aos-delay="400" className="flex flex-wrap gap-4 justify-center">
+            <div data-aos="fade-up" data-aos-delay="1700" className="flex flex-wrap gap-4 justify-center">
                 <button className="group relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium text-teal-400 transition duration-300 ease-out border-2 border-teal-500 rounded-full shadow-md hover:shadow-teal-400/40">
                     <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-teal-500 group-hover:translate-x-0 ease">
                         <Code className="w-6 h-6" />
